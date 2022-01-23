@@ -1,8 +1,46 @@
-﻿@{
+﻿@using Karsilastirma.ViewModels
+
+@model SearchQueryViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
+<img class="center" src="~/Images/karsilastirma3.png">
+
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p><h3>Teknosa,GittiGidiyor,Vatan Bilgisayar <br />Telefon Karşılaştırma Sitesi <br />Uygulaması</h3></p>
+</div>
+
+<div class="container">
+    <form asp-action="Search" asp-controller="Home">
+        <div class="row height d-flex justify-content-center align-items-center">
+            <div class="col-md-6">
+                <div class="form">
+                    @Html.TextBoxFor(m=>m.Request.Query)
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div>
+                    <input type="submit" value="Ara" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="container">
+    <div class="search">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="search-1"> <i class='bx bx-search-alt'></i> <input type="text" placeholder="UX Designer"> </div>
+            </div>
+            <div class="col-md-6">
+                <div>
+                    <div class="search-2"> <i class='bx bxs-map'></i> <input type="text" placeholder="San Francisco,USA"> <button>Search</button> </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

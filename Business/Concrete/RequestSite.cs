@@ -16,10 +16,12 @@ namespace Karsilastirma.Business
 
         public List<Product> GetAllProductByQuery(Request request)
         {
-
+            var vatanQuery= $"/arama/{request.Query.Trim().Replace(" ", "%20")}/cep-telefonu-modelleri/";
+            var gittigidiyorQuery= $"/cep-telefonu?k={request.Query.Trim().Replace(" ", "%20")}/";
+            var teknosaQuery= $"arama/?s={request.Query.Trim().Replace(" ", "%20")}";
             List<Product> products = new List<Product>();
             request.SiteUrl = "https://www.vatanbilgisayar.com/";
-            request.Query = "samsung-cep-telefonu/";
+            request.Query = vatanQuery;
             var vatanProducts = GetProductsByVatanBilgisayar(request);
             foreach (var product in vatanProducts)
             {
@@ -29,11 +31,12 @@ namespace Karsilastirma.Business
                     PhotoUrl = product.PhotoUrl,
                     Price = product.Price,
                     ProductCode = product.ProductCode,
-                    Url = product.Url
+                    Url = product.Url,
+                    Store = "Vatan"
                 });
             }
             request.SiteUrl = "https://www.gittigidiyor.com/";
-            request.Query = "samsung-cep-telefonu/";
+            request.Query = gittigidiyorQuery;
             var gittiGidiyorProducts = GetProductsByGittiGidiyor(request);
             foreach (var product in gittiGidiyorProducts)
             {
@@ -43,12 +46,13 @@ namespace Karsilastirma.Business
                     PhotoUrl = product.PhotoUrl,
                     Price = product.Price,
                     ProductCode = product.ProductCode,
-                    Url = product.Url
+                    Url = product.Url,
+                    Store = "GittiGidiyor"
                 });
 
             }
             request.SiteUrl = "https://www.teknosa.com/";
-            request.Query = "arama/?s=samsung+cep+telefonu";
+            request.Query = teknosaQuery;
             var teknosaProducts = GetProductsByTeknosa(request);
             foreach (var product in teknosaProducts)
             {
@@ -58,7 +62,9 @@ namespace Karsilastirma.Business
                     PhotoUrl = product.PhotoUrl,
                     Price = product.Price,
                     ProductCode = product.ProductCode,
-                    Url = product.Url
+                    Url = product.Url,
+                    Store = "Teknosa"
+
                 });
             }
 
@@ -118,7 +124,7 @@ namespace Karsilastirma.Business
                     foto = link.SelectSingleNode(".//img[@class='foto']").Attributes["src"].Value;
                 }
                 var urunlink = link.SelectSingleNode(".//a[@class='link']").Attributes["href"].Value;
-                urunler.Add(new vatanUrun()
+                urunler.Add(new ggUrun()
                 {
                     Price = double.Parse(fiyat.Trim('T', 'L', ' ')),
                     Name = isim,
@@ -134,21 +140,22 @@ namespace Karsilastirma.Business
         public List<Product> GetProductsByTeknosa(Request request)
         {
             var getHtml = _sendRequest.GetList(request);
-            var sec = getHtml.DocumentNode.Descendants("div").Where(node => node.GetAttributeValue("class", "").Contains("product-item-inner")).ToList();
+            var sec = getHtml.DocumentNode.Descendants("div").Where(node => node.GetAttributeValue("class", "").Contains("prd-inner")).ToList();
             List<Product> urunler = new List<Product>();
 
             foreach (var link in sec)
             {
-                var isim = link.SelectSingleNode(".//div[@class='product-name']").InnerText.Trim();
-                var fiyat = link.SelectSingleNode(".//div[@class='product-price']").InnerText.Trim();
-                var foto = link.SelectSingleNode(".//img[@loading='auto']").Attributes["data-src"].Value;
-                var urunlink = link.SelectSingleNode(".//div[@class='listing-page-bv']").Attributes["data-bv-redirect-url"].Value;
-                urunler.Add(new vatanUrun()
+                var isim = link.SelectSingleNode(".//img[@alt]").Attributes["alt"].Value;
+                var fiyat = link.SelectSingleNode(".//div[@class='prd-prc2']").InnerText.Trim();
+                var foto = link.SelectSingleNode(".//img[@alt]").Attributes["src"].Value;
+                var urunlink = link.SelectSingleNode(".//input[@class='prd-compare-checkbox']").Attributes["data-compare-url"].Value;
+                urunler.Add(new teknosaUrun()
                 {
                     Price = double.Parse(fiyat.Trim('T', 'L', ' ')),
                     Name = isim,
                     PhotoUrl = foto,
-                    Url = urunlink
+                    Url = "https://www.teknosa.com" + urunlink
+
                 });
             }
 

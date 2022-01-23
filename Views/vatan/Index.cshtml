@@ -1,4 +1,4 @@
-﻿@model IList<Product>
+﻿@*@model IList<Product>
 @{
     ViewData["Başlık"] = "Ürün Listesi";
 }
@@ -20,11 +20,12 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <img src="@item.PhotoUrl" width="100%" alt="">
+                        <img src="@item.PhotoUrl" width="100" height="100" alt="">
                     </div>
                     <div class="col-md-6">
                         <div class="card-body">
                             <p class="card-text"><h3>Fiyat @item.Price₺</h3></p>
+                            <p class="card-text"><h3>@item.magaza</h3></p>
                         </div>
                         <div class="col-md-12">
                             <div class="card-footer">
@@ -39,4 +40,32 @@
             </div>
         </div>
     }
+</div>*@
+<div class="row">
+    @foreach (var item in Model)
+    {
+<div class="container d-flex justify-content-center mt-50 mb-50">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="card card-body">
+                <div class="media align-items-center align-items-lg-start text-center text-lg-left flex-column flex-lg-row">
+                    <div class="mr-2 mb-3 mb-lg-0"> <img src="@item.PhotoUrl" width="150" height="150" alt=""> </div>
+                    <div class="media-body">
+                        <h6 class="media-title font-weight-semibold"> <a data-abc="true">@item.Name</a> </h6>
+                        <ul class="list-inline list-inline-dotted mb-3 mb-lg-2">
+                        </ul>
+                        <ul class="list-inline list-inline-dotted mb-0">
+                        </ul>
+                    </div>
+                    <div class="mt-3 mt-lg-0 ml-lg-3 text-center">
+                        <h3 class="mb-0 font-weight-semibold">@item.Price₺</h3>
+                        <div> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> </div>
+                         <a type="button" href="@item.Url"class="btn btn-warning mt-4 text-white"><i class="icon-cart-add mr-2"></i>Mağazada Görüntüle</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
 </div>

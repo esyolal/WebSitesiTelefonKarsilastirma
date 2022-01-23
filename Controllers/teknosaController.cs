@@ -15,7 +15,7 @@ namespace Karsilastirma.Controllers
 
         public ActionResult Index()
         {
-            var teknosaRequest = new Request { SiteUrl = "https://www.teknosa.com/", Query = "arama/?s=cep+telefonları/" };
+            var teknosaRequest = new Request { SiteUrl = "https://www.teknosa.com/", Query = "arama/?s=cep+telefonları" };
             var result = _requestSite.GetProductsByTeknosa(teknosaRequest);
 
             return View(result);

@@ -1,4 +1,6 @@
-﻿using Karsilastirma.Models;
+﻿using Karsilastirma.Business;
+using Karsilastirma.Models;
+using Karsilastirma.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,11 +13,11 @@ namespace Karsilastirma.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IRequestSite _requestSite;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IRequestSite requestSite)
         {
-            _logger = logger;
+            _requestSite = requestSite;
         }
 
         public IActionResult Index()
@@ -23,11 +25,12 @@ namespace Karsilastirma.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        [Route("search", Name = "Search")]
+        public IActionResult Search(SearchQueryViewModel model)
         {
-            return View();
+            model.Products = _requestSite.GetAllProductByQuery(model.Request);
+            return View(model);
         }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
